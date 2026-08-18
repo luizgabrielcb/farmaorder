@@ -2,9 +2,9 @@
 
 ## 💊 FarmaBook
 
-**O caderno de encomendas e faltas da farmácia, agora digital.**
+**The pharmacy's order and shortage notebook, now digital.**
 
-Sistema de gestão de encomendas, faltas, manipulações e receitas para farmácias.
+Order management system for pharmacies — orders, shortages, compoundings, and prescriptions.
 
 [![CI](https://github.com/luizgabrielcb/farmabook/actions/workflows/ci.yml/badge.svg)](https://github.com/luizgabrielcb/farmabook/actions/workflows/ci.yml)
 ![Tests](https://img.shields.io/badge/tests-459%20passing-success)
@@ -16,217 +16,225 @@ Sistema de gestão de encomendas, faltas, manipulações e receitas para farmác
 
 </div>
 
-## 📑 Sumário
+## 📑 Table of Contents
 
-- [Demonstração](#-demonstração)
-- [O problema](#-o-problema)
-- [A solução](#-a-solução)
-- [Funcionalidades](#-funcionalidades)
-- [Os domínios em detalhe](#-os-domínios-em-detalhe)
-- [Arquitetura](#-arquitetura)
-- [Stack tecnológica](#-stack-tecnológica)
-- [Decisões de projeto que valem nota](#-decisões-de-projeto-que-valem-nota)
-- [Testes e cobertura](#-testes-e-cobertura)
-- [Começando](#-começando)
-- [Executando em desenvolvimento](#-executando-em-desenvolvimento)
-- [Como rodar na farmácia](#-como-rodar-na-farmácia)
-- [API REST](#-api-rest)
-- [Estrutura do repositório](#-estrutura-do-repositório)
-- [Convenções de código](#-convenções-de-código)
-- [Autor](#-autor)
----
-
-## 📸 Demonstração
-
-<img width="1919" height="999" alt="Captura de Tela 2026-06-17 às 20 46 37" src="https://github.com/user-attachments/assets/8ceecd25-479f-4d9b-b46b-0f152b887b94" />
-<img width="1920" height="998" alt="Captura de Tela 2026-06-17 às 20 48 19" src="https://github.com/user-attachments/assets/5902b754-7b97-4771-807b-07edb589715c" />
-<img width="1920" height="998" alt="Captura de Tela 2026-06-17 às 20 47 23" src="https://github.com/user-attachments/assets/c249564c-3f05-4106-8a8b-7c7a5660e06a" />
+- [Demo](#-demo)
+- [The Problem](#-the-problem)
+- [The Solution](#-the-solution)
+- [Features](#-features)
+- [Domains in Detail](#-domains-in-detail)
+- [Architecture](#-architecture)
+- [Tech Stack](#-tech-stack)
+- [Notable Design Decisions](#-notable-design-decisions)
+- [Tests and Coverage](#-tests-and-coverage)
+- [Getting Started](#-getting-started)
+- [Running in Development](#-running-in-development)
+- [How to Run at the Pharmacy](#-how-to-run-at-the-pharmacy)
+- [REST API](#-rest-api)
+- [Repository Structure](#-repository-structure)
+- [Code Conventions](#-code-conventions)
+- [Author](#-author)
 
 ---
 
-## 🩹 O problema
+## 📸 Demo
 
-Este projeto nasceu de uma dor real, vivida na pele durante quase **4 anos trabalhando em uma farmácia**.
+<img width="1919" height="999" alt="Screenshot 2026-06-17 at 20 46 37" src="https://github.com/user-attachments/assets/8ceecd25-479f-4d9b-b46b-0f152b887b94" />
+<img width="1920" height="998" alt="Screenshot 2026-06-17 at 20 48 19" src="https://github.com/user-attachments/assets/5902b754-7b97-4771-807b-07edb589715c" />
+<img width="1920" height="998" alt="Screenshot 2026-06-17 at 20 47 23" src="https://github.com/user-attachments/assets/c249564c-3f05-4106-8a8b-7c7a5660e06a" />
 
-A farmácia tinha dois cadernos sagrados no balcão: o **caderno de encomendas** (o que o cliente pediu e a loja precisa comprar do distribuidor) e o **caderno de faltas** (o que faltou na prateleira e precisa ser reposto). E todo dia esses cadernos cobram seu preço:
-
-- ✍️ **Anotação manual e propensa a erro** — na correria do balcão, é fácil esquecer de anotar uma encomenda, ou esquecer de **riscar** uma que já foi entregue. O caderno vira uma mistura de pedidos pendentes e resolvidos, sem clareza nenhuma.
-- 🔍 **Buscar é um sofrimento** — quando um cliente volta **um mês depois** perguntando "o que mesmo eu encomendei?", começa a garimpagem página por página, tentando decifrar a letra de quem anotou.
-- 🧑‍🤝‍🧑 **Ninguém sabe quem fez o quê** — quem anotou? quem pediu ao distribuidor? quem entregou? O caderno não responde. Quando algo dá errado, não há a quem perguntar.
-- 📞 **Avisar o cliente é trabalhoso** — quando a encomenda chega, alguém precisa lembrar de ligar, digitar o número, escrever o recado... e muitas vezes simplesmente não acontece.
-- 🗑️ **O histórico se perde** — caderno acaba, caderno se molha, caderno se perde. E com ele todo o histórico de quem comprou o quê.
-## ✅ A solução
-
-O **FarmaBook** substitui esses cadernos por um sistema web pensado para o balcão: rápido de operar, com **histórico permanente e pesquisável**, **rastreio de autoria** em cada passo e **notificação automática do cliente via WhatsApp**.
-
-Cada encomenda e cada falta deixa de ser um rabisco e passa a ser um registro com **ciclo de vida bem definido** — sempre dá pra saber em que pé está cada pedido, quem cuidou dele e quando. Nada é apagado de fato; mesmo o que é "removido" continua no histórico. E quando o produto chega, um clique gera o link de WhatsApp com a mensagem pronta para o cliente.
- 
 ---
 
-## ✨ Funcionalidades
+## 🩹 The Problem
 
-- 🧾 **Encomendas com itens independentes** — uma encomenda agrupa vários produtos, e cada item tem seu próprio ciclo de vida (`PENDENTE → PEDIDO → RECEBIDO → ENTREGUE`).
-- 👣 **Rastreio de autoria em cada passo** — quem pediu ao distribuidor, quem recebeu, quem entregou e quando: tudo carimbado automaticamente com o usuário responsável.
-- 💬 **WhatsApp automático na chegada** — ao marcar uma encomenda (ou manipulação) como recebida, o sistema monta um link `wa.me` com a mensagem pronta, saudação conforme o horário e número já normalizado.
-- 💰 **Controle de pagamento por item** — incluindo o fluxo de "anotar na conta" (caderneta/fiado): `A PAGAR → ANOTAR → ANOTADO`, ou direto para `PAGO`.
-- 📉 **Faltas de estoque** — registro do que faltou na prateleira, agrupável em pedidos de reposição por representante/distribuidora.
-- 🔐 **Login por PIN** — operação ágil de balcão; cada ação registra automaticamente o operador.
-- 🗂️ **Histórico permanente e à prova de renomeação** — nada é apagado de fato, e nomes de cliente/usuário/distribuidora ficam "congelados" no registro, então o passado sobrevive mesmo se um cadastro for renomeado.
+This project was born out of a real pain point, lived firsthand during nearly **4 years working at a pharmacy**.
+
+The pharmacy had two sacred notebooks at the counter: the **order notebook** (what the customer requested and the store needs to buy from the distributor) and the **shortage notebook** (what ran out on the shelf and needs restocking). And every day those notebooks take their toll:
+
+- ✍️ **Manual, error-prone entries** — in the rush at the counter, it's easy to forget to log an order, or to forget to **cross out** one that's already been fulfilled. The notebook becomes a mix of pending and resolved requests, with no clarity whatsoever.
+- 🔍 **Searching is a nightmare** — when a customer comes back **a month later** asking "what did I order again?", it's a page-by-page hunt trying to decipher whoever's handwriting.
+- 🧑‍🤝‍🧑 **Nobody knows who did what** — who wrote it down? who placed the order with the distributor? who delivered it? The notebook doesn't answer. When something goes wrong, there's no one to ask.
+- 📞 **Notifying the customer is tedious** — when the order arrives, someone has to remember to call, dial the number, figure out the message... and it often just doesn't happen.
+- 🗑️ **History gets lost** — notebooks run out, get wet, get lost. And with them, every record of who bought what.
+
+## ✅ The Solution
+
+**FarmaBook** replaces those notebooks with a web system designed for the counter: fast to operate, with **permanent and searchable history**, **authorship tracking** at every step, and **automatic customer notifications via WhatsApp**.
+
+Every order and every shortage stops being a scribble and becomes a record with a **well-defined lifecycle** — you can always see where each request stands, who handled it, and when. Nothing is truly deleted; even "removed" entries remain in the history. And when a product arrives, one click generates the WhatsApp link with the message ready to send.
+
 ---
 
-## 🧩 Os domínios em detalhe
+## ✨ Features
 
-A análise abaixo reflete o modelo real do código (entidades, status e regras).
+- 🧾 **Orders with independent items** — an order groups multiple products, and each item has its own lifecycle (`PENDING → ORDERED → RECEIVED → DELIVERED`).
+- 👣 **Authorship tracking at every step** — who ordered from the distributor, who received it, who delivered it and when: all automatically stamped with the responsible user.
+- 💬 **Automatic WhatsApp on arrival** — when an order (or compounding) is marked as received, the system builds a `wa.me` link with the message ready to go, a time-appropriate greeting, and the number already normalized.
+- 💰 **Per-item payment control** — including a "put it on the tab" flow: `TO_PAY → MAKE_NOTE → NOTED`, or straight to `PAID`.
+- 📉 **Stock shortages** — log what ran out on the shelf, groupable into restocking requests by sales rep/distributor.
+- 🔐 **PIN login** — optimized for counter operation; every action automatically records the operator.
+- 🗂️ **Permanent, rename-proof history** — nothing is truly deleted, and customer/user/distributor names are frozen in the record, so the past survives even if a record is later renamed.
 
-### 🧾 Encomendas (`order`)
-O núcleo do sistema. Uma `Order` pertence a um cliente e reúne uma lista de `OrderItem`.
-
-- **Item** → produto, categoria, quantidade, distribuidora, preço e status próprios.
-- **Status do item** → `PENDING → ORDERED → RECEIVED → DELIVERED` (a ordem importa — é usada nos cálculos).
-- **Status da encomenda** → calculado como o **menor status** entre os itens. Marcou todos como recebidos? A encomenda vira "recebida". Nunca é digitado à mão.
-- **Carimbo de autoria** → cada transição grava o trio *quem / nome / quando* (`orderedBy…`, `receivedBy…`, `deliveredBy…`). Ao **regredir** um item (ex.: recebido → pedido), o carimbo correspondente é limpo.
-- **Notificação** → na **primeira** vez que a encomenda atinge `RECEIVED`, uma notificação de WhatsApp é gerada e `notifiedAt` é preenchido.
-- **Pagamento** → cada item tem status de pagamento (`TO_PAY → MAKE_NOTE → NOTED`, ou `PAID`); o da encomenda é o menor entre os itens. `NOTED` e `PAID` são terminais.
-- **Transições em lote** (`mark-as-*` na encomenda) são **tolerantes**: itens inelegíveis são ignorados. As **individuais** (no item) são **estritas**: retornam `409 Conflict`.
-- **Imutabilidade** → itens/encomendas `DELIVERED` não podem ser alterados, e uma encomenda com item entregue não pode ser excluída.
-### 📉 Faltas (`shortage`)
-`Shortage` registra um produto que faltou (produto, categoria, quantidade, preço de custo), com status `PENDING → ORDERED`. Várias faltas podem ser agrupadas em um `ShortageOrder` — um pedido de reposição direcionado a um **representante** e a uma **distribuidora**, também com ciclo `PENDING → ORDERED` e rastreio de autoria.
-
-### 💬 Notificações (`notification`)
-Toda notificação faz *snapshot* de telefone, nome, mensagem e link no momento do envio, e referencia a encomenda **ou** a manipulação que a originou. O link é um `wa.me` com a mensagem URL-encoded, saudação por horário (fuso `America/Sao_Paulo`) e telefone normalizado (só dígitos, prefixo `55`). Notificações podem ser **reenviadas** — o que gera um novo registro, preservando o original.
-
-### 👤 Usuários e autenticação (`auth`)
-`User` tem nome, PIN (hash **BCrypt**), papel (`ADMIN` / `SELLER`) e flag `active`. A autenticação é deliberadamente enxuta: cada requisição protegida envia o header `X-Auth-Pin`, e o `AuthService` casa o PIN contra os usuários ativos — o usuário resolvido é o "ator" carimbado na auditoria. Esse desenho é discutido em [Decisões de projeto](#-decisões-de-projeto-que-valem-nota).
-
-### 🧱 Cadastros e base (`customer`, `distributor`, `catalog`, `shared`)
-`Customer` (nome + telefone para WhatsApp), `Distributor` (nome) são os cadastros de apoio. `Category` é o enum de categorias de produto (`MEDICAMENTOS`, `PERFUMARIA`, `SUPLEMENTOS`, `PRODUTOS_NATURAIS`, `OUTROS`). Tudo herda de `Auditable` (`createdAt`, `updatedAt`, `deletedAt`).
- 
 ---
 
-## 🏛 Arquitetura
+## 🧩 Domains in Detail
+
+The analysis below reflects the actual model in the code (entities, statuses, and rules).
+
+### 🧾 Orders (`order`)
+The core of the system. An `Order` belongs to a customer and holds a list of `OrderItem`.
+
+- **Item** → product, category, quantity, distributor, price, and its own status.
+- **Item status** → `PENDING → ORDERED → RECEIVED → DELIVERED` (order matters — it's used in calculations).
+- **Order status** → calculated as the **lowest status** among its items. Marked all items as received? The order becomes "received". Never typed manually.
+- **Authorship stamp** → each transition records the trio *who / name / when* (`orderedBy…`, `receivedBy…`, `deliveredBy…`). When an item is **regressed** (e.g. received → ordered), the corresponding stamp is cleared.
+- **Notification** → the **first** time an order reaches `RECEIVED`, a WhatsApp notification is generated and `notifiedAt` is set.
+- **Payment** → each item has a payment status (`TO_PAY → MAKE_NOTE → NOTED`, or `PAID`); the order's payment status is the lowest among its items. `NOTED` and `PAID` are terminal states.
+- **Bulk transitions** (`mark-as-*` on the order) are **lenient**: ineligible items are skipped. **Individual** transitions (on the item) are **strict**: they return `409 Conflict`.
+- **Immutability** → `DELIVERED` items/orders cannot be modified, and an order with a delivered item cannot be deleted.
+
+### 📉 Shortages (`shortage`)
+`Shortage` records a product that ran out (product, category, quantity, cost price), with status `PENDING → ORDERED`. Multiple shortages can be grouped into a `ShortageOrder` — a restocking request directed at a **sales rep** and a **distributor**, also with a `PENDING → ORDERED` cycle and authorship tracking.
+
+### 💬 Notifications (`notification`)
+Every notification takes a snapshot of the phone number, name, message, and link at the time of sending, and references the order **or** compounding that triggered it. The link is a `wa.me` with the URL-encoded message, a time-based greeting (timezone `America/Sao_Paulo`), and the normalized phone number (digits only, `55` prefix). Notifications can be **resent** — which creates a new record, preserving the original.
+
+### 👤 Users and Authentication (`auth`)
+`User` has a name, PIN (hashed with **BCrypt**), role (`ADMIN` / `SELLER`), and an `active` flag. Authentication is deliberately minimal: every protected request sends the `X-Auth-Pin` header, and `AuthService` matches the PIN against active users — the resolved user becomes the "actor" stamped in the audit trail. This design is discussed under [Notable Design Decisions](#-notable-design-decisions).
+
+### 🧱 Supporting Records (`customer`, `distributor`, `catalog`, `shared`)
+`Customer` (name + WhatsApp phone number), `Distributor` (name) are the supporting registries. `Category` is the product category enum (`MEDICATIONS`, `PERFUMERY`, `SUPPLEMENTS`, `NATURAL_PRODUCTS`, `OTHER`). Everything inherits from `Auditable` (`createdAt`, `updatedAt`, `deletedAt`).
+
+---
+
+## 🏛 Architecture
 
 ```
 ┌──────────────┐      HTTP /api      ┌──────────────┐      JDBC      ┌──────────────┐
 │   Frontend   │ ──────────────────► │   Backend    │ ─────────────► │  PostgreSQL  │
-│ React + Vite │   (proxy nginx)     │ Spring Boot  │                │      17      │
+│ React + Vite │   (nginx proxy)     │ Spring Boot  │                │      17      │
 │   :80        │                     │    :8080     │                │    :5432     │
 └──────────────┘                     └──────────────┘                └──────────────┘
-        SPA servida via nginx,            API REST por domínio,         schema 100%
-       que faz proxy de /api → :8080      ddl-auto: validate          gerenciado por Flyway
+     SPA served via nginx,               REST API by domain,            schema 100%
+   which proxies /api → :8080            ddl-auto: validate          managed by Flyway
 ```
 
-A organização do backend é **por domínio** (não por camada técnica), espelhando as áreas da farmácia:
+The backend is organized **by domain** (not by technical layer), mirroring the areas of a pharmacy:
 
 ```
 br.com.luizgabriel.farmabook
-├── order          # encomendas e seus itens  ← núcleo
-├── shortage       # faltas + pedidos de reposição
-├── compounding    # manipulações  └─ pharmacy  (farmácias de manipulação)
-├── prescription   # receitas e seus itens (lote/validade)
-├── notification   # notificações WhatsApp (wa.me)
-├── customer       # clientes (com telefone)
-├── distributor    # distribuidoras
-├── catalog        # categorias de produto (enum)
-├── auth           # usuários + autenticação por PIN
+├── order          # orders and their items  ← core
+├── shortage       # shortages + restocking requests
+├── compounding    # compoundings  └─ pharmacy  (compounding pharmacies)
+├── prescription   # prescriptions and their items (batch/expiry)
+├── notification   # WhatsApp notifications (wa.me)
+├── customer       # customers (with phone number)
+├── distributor    # distributors
+├── catalog        # product categories (enum)
+├── auth           # users + PIN authentication
 ├── shared         # Auditable (createdAt/updatedAt/deletedAt)
-├── exception      # exceções + GlobalExceptionHandler
+├── exception      # exceptions + GlobalExceptionHandler
 └── config         # JPA Auditing, BCrypt
 ```
 
-Cada domínio segue o mesmo formato: `Entity`, `Repository`, `Service` (regra de negócio), `Controller` (REST), `Mapper` (MapStruct) e `dto/` (records de request/response).
- 
+Each domain follows the same structure: `Entity`, `Repository`, `Service` (business logic), `Controller` (REST), `Mapper` (MapStruct), and `dto/` (request/response records).
+
 ---
 
-## 🧰 Stack tecnológica
+## 🧰 Tech Stack
 
 ### Backend
-| Camada | Tecnologia |
+| Layer | Technology |
 |---|---|
-| Linguagem | Java 21 |
+| Language | Java 21 |
 | Framework | Spring Boot 3.5 (Web, Data JPA, Validation) |
-| Banco de dados | PostgreSQL 17 |
-| Migrações | Flyway (versionadas) |
-| Mapeamento DTO↔Entidade | MapStruct |
+| Database | PostgreSQL 17 |
+| Migrations | Flyway (versioned) |
+| DTO↔Entity Mapping | MapStruct |
 | Boilerplate | Lombok |
-| Hashing de PIN | Spring Security Crypto (BCrypt) |
-| Testes | JUnit 5, Mockito, Testcontainers, REST Assured, JSON Unit |
+| PIN Hashing | Spring Security Crypto (BCrypt) |
+| Testing | JUnit 5, Mockito, Testcontainers, REST Assured, JSON Unit |
 
 ### Frontend
-| Camada | Tecnologia |
+| Layer | Technology |
 |---|---|
-| Linguagem | TypeScript |
+| Language | TypeScript |
 | Framework | React 19 |
 | Build | Vite |
-| Estilo | TailwindCSS 4 |
-| Componentes | Radix UI + lucide-react |
-| Estado de servidor | TanStack Query |
-| Roteamento | React Router 7 |
+| Styling | TailwindCSS 4 |
+| Components | Radix UI + lucide-react |
+| Server State | TanStack Query |
+| Routing | React Router 7 |
 | HTTP | Axios |
 
-### Infraestrutura
+### Infrastructure
 - **Docker & Docker Compose** — `postgres` + `backend` + `frontend`
-- **nginx** — serve a SPA e faz proxy reverso de `/api` (evita CORS)
-- **GitHub Actions** — CI roda `mvnw clean verify` a cada push/PR na `main`
-> A interface é toda em **português**, com atalhos de teclado pensados para o balcão (ex.: **F2** Faltas, **F3** Encomendas, **F4** Clientes).
- 
+- **nginx** — serves the SPA and reverse-proxies `/api` (avoids CORS)
+- **GitHub Actions** — CI runs `mvnw clean verify` on every push/PR to `main`
+
+> The interface is entirely in **Portuguese**, with keyboard shortcuts designed for counter use (e.g. **F2** Shortages, **F3** Orders, **F4** Customers).
+
 ---
 
-## 💡 Decisões de projeto que valem nota
+## 💡 Notable Design Decisions
 
-> Esta seção é sobre o **porquê** de cada escolha — o *como* está em [Os domínios em detalhe](#-os-domínios-em-detalhe).
+> This section covers the **why** behind each choice — the *how* is in [Domains in Detail](#-domains-in-detail).
 
-- **Status derivado, não digitado.** O status da encomenda é sempre o menor status entre os itens, recalculado a cada mudança. Decisão tomada para tornar **impossível** o "caderno inconsistente" que existia no papel — não há como marcar a encomenda como entregue se um item ainda está pendente.
-- **Denormalização proposital para histórico.** Nomes de cliente/usuário/distribuidora são copiados para dentro do registro. Renomear um cadastro **não** reescreve o passado — o histórico precisa refletir o que era verdade no momento, não o estado atual.
-- **Soft delete em tudo** (via `@SQLDelete` + `@SQLRestriction`). A farmácia precisa de auditoria; "excluir" só marca `deleted_at` e o dado permanece consultável.
-- **Schema só via Flyway** (`ddl-auto: validate`). O Hibernate nunca altera o banco; toda mudança é uma migração `V{n}__*.sql` versionada e imutável. Isso dá um schema reproduzível e revisável em PR.
-- **Notificação como efeito de transição.** O WhatsApp não é um botão solto — é disparado pela própria transição para "recebido", garantindo que o cliente seja avisado de forma consistente, sem depender de alguém lembrar.
-- **Autenticação por PIN, projetada para uso interno.** O FarmaBook foi pensado como ferramenta de balcão numa **rede local da loja** (o mesmo modelo de um PDV de supermercado): PIN curto otimiza a troca de operador no atendimento, e a máquina fica fisicamente atrás do balcão. Por isso não há sessão nem filtro do Spring Security — apenas o header `X-Auth-Pin` resolvido a cada requisição. **Se o sistema fosse exposto à internet pública**, este desenho seria endurecido: troca do PIN por token de sessão após o primeiro login, rate limiting com bloqueio após tentativas falhas, e HTTPS obrigatório. A escolha atual é uma adequação consciente ao contexto de implantação, não uma omissão.
+- **Derived status, never typed.** The order status is always the lowest status among its items, recalculated on every change. This makes it **impossible** to have the "inconsistent notebook" problem that existed on paper — you can't mark an order as delivered if an item is still pending.
+- **Intentional denormalization for history.** Customer/user/distributor names are copied into the record. Renaming a registry entry does **not** rewrite the past — history must reflect what was true at the time, not the current state.
+- **Soft delete everywhere** (via `@SQLDelete` + `@SQLRestriction`). The pharmacy needs auditing; "deleting" only sets `deleted_at` and the data remains queryable.
+- **Schema only via Flyway** (`ddl-auto: validate`). Hibernate never touches the database schema; every change is a versioned, immutable `V{n}__*.sql` migration. This yields a reproducible, PR-reviewable schema.
+- **Notification as a transition side effect.** WhatsApp isn't a loose button — it's triggered by the transition to "received" itself, ensuring the customer is notified consistently without relying on someone remembering to do it.
+- **PIN authentication, designed for internal use.** FarmaBook was conceived as a counter tool on a **local store network** (the same model as a supermarket POS): a short PIN optimizes operator switching during service, and the machine sits physically behind the counter. That's why there's no session or Spring Security filter — just the `X-Auth-Pin` header resolved on each request. **If the system were exposed to the public internet**, this design would be hardened: replacing the PIN with a session token after the first login, rate limiting with lockout after failed attempts, and mandatory HTTPS. The current choice is a conscious trade-off for the deployment context, not an oversight.
+
 ---
 
-## 🧪 Testes e cobertura
+## 🧪 Tests and Coverage
 
-O backend tem **459 testes** automatizados, divididos entre **unitários** (serviços, com Mockito) e **de integração** (controllers, com Testcontainers + PostgreSQL real).
+The backend has **459 automated tests**, split between **unit tests** (services, with Mockito) and **integration tests** (controllers, with Testcontainers + a real PostgreSQL instance).
 
-| Métrica | Cobertura |
+| Metric | Coverage |
 |---|---|
 | Classes | **97%** (103/106) |
-| Métodos | **97%** (343/353) |
-| Linhas | **94%** (1624/1721) | 
+| Methods | **97%** (343/353) |
+| Lines | **94%** (1624/1721) |
 
 ```bash
 cd backend
- 
-./mvnw test                                       # todos os testes
-./mvnw verify                                     # build completo + testes (igual ao CI)
-./mvnw test -Dtest=OrderServiceTest               # uma classe
-./mvnw test -Dtest=OrderServiceTest#shouldRecalculateStatusWhenItemChanges   # um método
+
+./mvnw test                                       # all tests
+./mvnw verify                                     # full build + tests (same as CI)
+./mvnw test -Dtest=OrderServiceTest               # single class
+./mvnw test -Dtest=OrderServiceTest#shouldRecalculateStatusWhenItemChanges   # single method
 ```
 
-- **Unitários** (`*ServiceTest`): JUnit 5 + Mockito + AssertJ, com fixtures em memória. Cobrem o caminho feliz e cada ramo de falha (não encontrado, conflito, validação), sempre verificando que o efeito colateral **não** aconteceu nos casos de erro.
-- **Integração** (`*ControllerTestIT`): um único `PostgreSQLContainer` compartilhado, REST Assured e comparação de JSON com JSON Unit. O estado é limpo a cada teste via `@Sql`.
-  A pipeline de **CI** (GitHub Actions) executa `./mvnw clean verify` a cada push e PR na `main`.
+- **Unit tests** (`*ServiceTest`): JUnit 5 + Mockito + AssertJ, with in-memory fixtures. Cover the happy path and every failure branch (not found, conflict, validation), always verifying the side effect did **not** occur in error cases.
+- **Integration tests** (`*ControllerTestIT`): a single shared `PostgreSQLContainer`, REST Assured, and JSON comparison with JSON Unit. State is reset between tests via `@Sql`.
+
+The **CI pipeline** (GitHub Actions) runs `./mvnw clean verify` on every push and PR to `main`.
 
 ---
 
-## 🚀 Começando
+## 🚀 Getting Started
 
-### Pré-requisitos
-- [Docker](https://www.docker.com/) e Docker Compose
-- Para desenvolvimento: **JDK 21** e **Node.js 22+**
-### Subir tudo com Docker Compose
-A partir da raiz do repositório:
+### Prerequisites
+- [Docker](https://www.docker.com/) and Docker Compose
+- For development: **JDK 21** and **Node.js 22+**
+
+### Run Everything with Docker Compose
+From the repository root:
 
 ```bash
 docker compose up -d --build
 ```
 
-| Serviço | URL | Descrição |
+| Service | URL | Description |
 |---|---|---|
-| `frontend` | http://localhost | SPA React servida via nginx |
-| `backend` | http://localhost:8080 | API REST Spring Boot |
-| `postgres` | localhost:5432 | Banco PostgreSQL 17 |
+| `frontend` | http://localhost | React SPA served via nginx |
+| `backend` | http://localhost:8080 | Spring Boot REST API |
+| `postgres` | localhost:5432 | PostgreSQL 17 database |
 
-As credenciais do banco são lidas de um arquivo `.env` na raiz (não versionado). Copie o template e preencha com seus valores:
+Database credentials are read from a `.env` file at the root (not versioned). Copy the template and fill in your values:
 
 ```bash
 cp .envTemplate .env
@@ -234,16 +242,16 @@ cp .envTemplate .env
 
 ```bash
 # .env
-ENV_POSTGRES_DB=<nome-do-banco>
-ENV_POSTGRES_USER=<usuário>
-ENV_POSTGRES_PASSWORD=<senha-forte>
+ENV_POSTGRES_DB=<database-name>
+ENV_POSTGRES_USER=<username>
+ENV_POSTGRES_PASSWORD=<strong-password>
 ```
- 
+
 ---
 
-## 🛠 Executando em desenvolvimento
+## 🛠 Running in Development
 
-### 1. Banco de dados (obrigatório antes do backend)
+### 1. Database (required before the backend)
 ```bash
 docker compose up -d postgres
 ```
@@ -251,9 +259,9 @@ docker compose up -d postgres
 ### 2. Backend
 ```bash
 cd backend
-./mvnw spring-boot:run        # aplica as migrações Flyway e sobe a API em :8080
+./mvnw spring-boot:run        # applies Flyway migrations and starts the API on :8080
 ```
-Build sem testes:
+Build without tests:
 ```bash
 ./mvnw clean package -DskipTests
 ```
@@ -262,75 +270,75 @@ Build sem testes:
 ```bash
 cd frontend
 npm install
-npm run dev                   # Vite com HMR
+npm run dev                   # Vite with HMR
 ```
-> O cliente HTTP usa `baseURL: '/api'`; em produção o nginx faz o proxy para o backend.
+> The HTTP client uses `baseURL: '/api'`; in production, nginx proxies it to the backend.
 
-## 🌐 API REST
+## 🌐 REST API
 
-Todos os endpoints protegidos exigem o header `X-Auth-Pin`. Endpoints de listagem retornam `Page<...>` e aceitam `?page`, `?size` e `?sort=campo,direção`.
+All protected endpoints require the `X-Auth-Pin` header. Listing endpoints return `Page<...>` and accept `?page`, `?size`, and `?sort=field,direction`.
 
-### Autenticação — `/auth`
-| Método | Rota | Descrição |
+### Authentication — `/auth`
+| Method | Route | Description |
 |---|---|---|
-| `POST` | `/auth/validate-pin` | Valida o PIN de um usuário |
-| `POST` | `/auth/change-pin` | Troca o PIN |
+| `POST` | `/auth/validate-pin` | Validates a user's PIN |
+| `POST` | `/auth/change-pin` | Changes the PIN |
 
-### Encomendas — `/orders`
-| Método | Rota | Descrição |
+### Orders — `/orders`
+| Method | Route | Description |
 |---|---|---|
-| `POST` `GET` | `/orders` | Cria / lista (paginado) |
-| `GET` `PUT` `DELETE` | `/orders/{id}` | Detalha / atualiza / remove |
-| `PATCH` | `/orders/{id}/mark-as-{ordered\|received\|delivered}` | Transição em lote (tolerante) |
-| `POST` `PUT` `DELETE` | `/orders/{id}/items[/{itemId}]` | Gerencia itens |
-| `PATCH` | `/orders/{id}/items/{itemId}/mark-as-{ordered\|received\|delivered}` | Transição individual (estrita) |
-| `PATCH` | `/orders/{id}/items/{itemId}/payment/mark-as-{paid\|to-pay\|make-note\|noted}` | Fluxo de pagamento |
+| `POST` `GET` | `/orders` | Create / list (paginated) |
+| `GET` `PUT` `DELETE` | `/orders/{id}` | Get / update / delete |
+| `PATCH` | `/orders/{id}/mark-as-{ordered\|received\|delivered}` | Bulk transition (lenient) |
+| `POST` `PUT` `DELETE` | `/orders/{id}/items[/{itemId}]` | Manage items |
+| `PATCH` | `/orders/{id}/items/{itemId}/mark-as-{ordered\|received\|delivered}` | Individual transition (strict) |
+| `PATCH` | `/orders/{id}/items/{itemId}/payment/mark-as-{paid\|to-pay\|make-note\|noted}` | Payment flow |
 
-### Demais recursos
-| Recurso | Base | Operações |
+### Other Resources
+| Resource | Base | Operations |
 |---|---|---|
-| Usuários | `/users` | CRUD + `activate` / `deactivate` |
-| Clientes | `/customers` | CRUD |
-| Faltas | `/shortages` | CRUD + `mark-as-ordered` |
-| Pedidos de reposição | `/shortage-orders` | CRUD + `mark-as-ordered` |
-| Manipulações | `/compoundings` | CRUD + ciclo de vida + pagamento |
-| Farmácias de manipulação | `/compounding-pharmacies` | CRUD |
-| Receitas | `/prescriptions` | CRUD + itens + `mark-as-received` |
-| Distribuidoras | `/distributors` | CRUD |
-| Notificações | `/orders/{id}/notifications`, `/notifications/compoundings/{id}`, `/notifications/{id}/resend` | Consulta + reenvio |
+| Users | `/users` | CRUD + `activate` / `deactivate` |
+| Customers | `/customers` | CRUD |
+| Shortages | `/shortages` | CRUD + `mark-as-ordered` |
+| Restocking Orders | `/shortage-orders` | CRUD + `mark-as-ordered` |
+| Compoundings | `/compoundings` | CRUD + lifecycle + payment |
+| Compounding Pharmacies | `/compounding-pharmacies` | CRUD |
+| Prescriptions | `/prescriptions` | CRUD + items + `mark-as-received` |
+| Distributors | `/distributors` | CRUD |
+| Notifications | `/orders/{id}/notifications`, `/notifications/compoundings/{id}`, `/notifications/{id}/resend` | Query + resend |
 
-Erros são padronizados pelo `GlobalExceptionHandler`: `404` (não encontrado), `409` (conflito de estado), `401` (PIN inválido), `400` (validação).
- 
+Errors are standardized by `GlobalExceptionHandler`: `404` (not found), `409` (state conflict), `401` (invalid PIN), `400` (validation).
+
 ---
 
-## 📁 Estrutura do repositório
+## 📁 Repository Structure
 
 ```
 farmabook/
-├── backend/                  # API Spring Boot (módulo Maven)
-│   ├── src/main/java/...      # código organizado por domínio
+├── backend/                  # Spring Boot API (Maven module)
+│   ├── src/main/java/...      # code organized by domain
 │   ├── src/main/resources/
-│   │   └── db/migration/      # migrações Flyway (V1__… em diante)
-│   ├── src/test/             # testes unitários (*ServiceTest) e de integração (*ControllerTestIT)
+│   │   └── db/migration/      # Flyway migrations (V1__… onwards)
+│   ├── src/test/             # unit (*ServiceTest) and integration (*ControllerTestIT) tests
 │   ├── Dockerfile
 │   └── pom.xml
-├── frontend/                 # SPA React + Vite
+├── frontend/                 # React + Vite SPA
 │   ├── src/
-│   │   ├── api/              # clientes HTTP por recurso
-│   │   ├── pages/            # páginas por domínio
-│   │   ├── components/       # ui (Radix), layout, compartilhados
+│   │   ├── api/              # HTTP clients per resource
+│   │   ├── pages/            # pages per domain
+│   │   ├── components/       # ui (Radix), layout, shared
 │   │   ├── context/          # PIN, Toast, Confirm
-│   │   └── lib/              # cliente axios + utilitários
-│   ├── nginx.conf            # serve a SPA + proxy /api
+│   │   └── lib/              # axios client + utilities
+│   ├── nginx.conf            # serves the SPA + proxies /api
 │   └── Dockerfile
 ├── docker-compose.yml        # postgres + backend + frontend
-├── CLAUDE.md                 # guia de arquitetura e convenções para colaboradores
+├── CLAUDE.md                 # architecture guide and conventions for contributors
 └── README.md
 ```
 
-## 👤 Autor
+## 👤 Author
 
 **Luiz Gabriel Costa Britto**
 
 - GitHub: [@luizgabrielcb](https://github.com/luizgabrielcb)
-- LinkedIn: [luizgabrielcbritto](https://www.linkedin.com/in/luizgabrielcbritto/)
+- LinkedIn: [luizgabrielcbtto](https://www.linkedin.com/in/luizgabrielcbtto/)
